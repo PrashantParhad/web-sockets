@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Web socket</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+<body>
+  <h1>Web socket</h1>
+  <p>This is a simple HTML page with a text input and a submit button.</p>  
+<div>
+  <input type="text" id="messageInput" placeholder="Type a message">
+  <button type="submit" id="sendButton">Submit</button>
+</div>
+</body>
+<script>
+
+  const input = document.getElementById('messageInput');
+  const button = document.getElementById('sendButton');
+
+  const PORT = window.location.port || 3000;
+  const webSocketConnection = new WebSocket('ws://localhost:' + PORT);
+
+  webSocketConnection.onopen = ()=>{
+    // console.log('WebSocket connection established');
+    webSocketConnection.send('Hello from the client!');
+    webSocketConnection.onmessage = (msg) =>{
+      console.log('Message from server:', msg);
+    }
+  }
+</script>>
+</html>
