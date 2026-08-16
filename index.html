@@ -10,24 +10,45 @@
   <h1>Web socket</h1>
   <p>This is a simple HTML page with a text input and a submit button.</p>  
 <div>
-  <input type="text" id="messageInput" placeholder="Type a message">
-  <button type="submit" id="sendButton">Submit</button>
+  <input type="text" id="messageInput" placeholder="Type a message"/>
+  <button type="button" id="sendButton">Submit</button>
+  <ul id="messagesList">
+
+  </ul>
 </div>
 </body>
 <script>
 
   const input = document.getElementById('messageInput');
-  const button = document.getElementById('sendButton');
+  const sendButton = document.getElementById('sendButton');
+  const messagesList = document.getElementById('messagesList');
 
   const PORT = window.location.port || 3000;
   const webSocketConnection = new WebSocket('ws://localhost:' + PORT);
 
-  webSocketConnection.onopen = ()=>{
-    // console.log('WebSocket connection established');
-    webSocketConnection.send('Hello from the client!');
-    webSocketConnection.onmessage = (msg) =>{
-      console.log('Message from server:', msg);
+  webSocketConnection.onopen = () => {
+    webSocketConnection.onmessage=(message)=>{
+      console.log('Message from server is :', message);
+      // messagesList.innerHTML += `<li>${message.data}</li>`;
+      const parsedData = JSON.parse(message.data);
+      const li = document.createElement("li")
+      li.textContent = parsedData.message
+      messagesList.appendChild(li)
     }
-  }
-</script>>
+
+    sendButton.addEventListener('click',()=>{
+      const message = input.value;
+      webSocketConnection.send(JSON.stringify({ message }));
+    })
+  };
+
+  // webSocketConnection.onopen = ()=>{
+  //   // console.log('WebSocket connection established');
+    
+  //   webSocketConnection.send('Hello from the client!');
+  //   webSocketConnection.onmessage = (msg) =>{
+  //     console.log('Message from server is :', msg.data);
+  //   }
+  // }
+</script>
 </html>
